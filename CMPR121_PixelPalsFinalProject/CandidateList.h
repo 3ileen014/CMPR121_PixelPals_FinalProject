@@ -13,6 +13,4 @@ public:
 	CandidateList();
 };
 
-//edit
-
 #endif

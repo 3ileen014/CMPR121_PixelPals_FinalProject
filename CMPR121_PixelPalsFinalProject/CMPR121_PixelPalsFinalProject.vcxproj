@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CandidateList.cpp" />
     <ClCompile Include="CandidateType.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PersonType.cpp" />

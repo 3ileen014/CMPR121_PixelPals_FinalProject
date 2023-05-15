@@ -24,6 +24,9 @@
     <ClCompile Include="CandidateType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CandidateList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PersonType.h">

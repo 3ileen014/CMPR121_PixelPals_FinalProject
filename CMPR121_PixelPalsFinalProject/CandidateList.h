@@ -21,6 +21,7 @@ public:
 	void printAllCandidates() const;
 	void printCandidateCampusVotes(int social, int div) const;
 	void printCandidateTotalVotes(int social) const;
+	void printFinalResults() const;
 	
 	void destroyList();
 	~CandidateList();

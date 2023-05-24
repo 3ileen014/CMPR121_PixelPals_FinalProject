@@ -1,44 +1,141 @@
 
 #include <iostream>
+#include <fstream>
 #include "PersonType.h"
 #include "CandidateType.h"
+#include "CandidateList.h"
 using namespace std;
+
+void displayMenu();
+void processChoice(CandidateList& candidateList);
 
 int main()
 {
-    CandidateType c1; 
-    c1.setPersonInfo("Troy", "Barnes", 987654321);
-
-    c1.updateVotesByCampus(1, 12);
-    c1.updateVotesByCampus(2, 15);
-    c1.updateVotesByCampus(3, 10);
-    c1.updateVotesByCampus(4, 4);
+    ifstream input;
+    input.open("Data.txt");
     
-    cout << "c1's total votes: " << c1.getNumVotes() << endl;
-    cout << "c1's votes from campus 2: " << c1.getVotesByCampus(2) << endl;
-    cout << "c1's candidate info: "; c1.printCandidateInfo();
-    cout << endl;
-    c1.printCandidateTotalVotes(); 
-    cout << endl;
-    c1.printCandidateCampusVotes(4);
+    CandidateList candList;
 
-    // hello 
+    while (true) {
+        int SSN;
+        string fName, lName;
+        
+        input >> SSN;
+
+        if (SSN == -999) {
+            break;
+        }
+
+        input >> fName; input >> lName;
+        CandidateType cand;
+        cand.setPersonInfo(fName, lName, SSN);
+
+        for (int i = 0; i < 4; i++) {
+            int votes;
+            input >> votes; 
+            cand.updateVotesByCampus(i+1, votes);
+        }
+
+        candList.addCandidate(cand);
+    }
+
+    input.close();
+
+    displayMenu();
+    processChoice(candList);
+
+    cout << endl;
 
 }
 
-/*
-    PersonType p1;
-    p1.setPersonInfo("Annie", "Edison", 123456789);
-
-    cout << "getFirstName w/ p1: " << p1.getFirstName() << endl;
-    cout << "getLastname w/ p1: " << p1.getLastName() << endl;
-    cout << "getSSN w/ p1: " << p1.getSSN() << endl << endl;
-
-    cout << "printName w/ p1: ";
-    p1.printName();
-    cout << "printSSN w/ p1: ";
-    p1.printSSN();
-    cout << endl;
-    cout << "printPersonInfo w/ p1: ";
-    p1.printPersonInfo();
-    */
+void displayMenu()
+{
+    cout << "\n*** MAIN MENU ***\n";
+    cout << "\nSelect one of the following:\n\n";
+    cout << " 1: Print all candidates" << endl;
+    cout << " 2: Print a candidate's campus votes" << endl;
+    cout << " 3: Print a candidate's total votes" << endl;
+    cout << " 4: Print winner" << endl;
+    cout << " 5: Print final results" << endl;
+    cout << " 6: To exit" << endl;
+}
+void processChoice(CandidateList& candidateList)
+{
+    int choice;
+    cout << "\nEnter your choice: ";
+    cin >> choice;
+    while (choice != 6)
+    {
+        string fName, lName;
+        int campus = 0,
+            ssn = 0;
+        switch (choice)
+        {
+            // Print all candidates
+        case 1:
+            cout << endl;
+            candidateList.printAllCandidates();
+            cout << endl;
+            break;
+            // Print a candidates's campus votes
+        case 2:
+            cout << "\nEnter candidate's social security number (no dashes): ";
+            cin >> ssn;
+            cout << endl;
+            if (candidateList.searchCandidate(ssn))
+            {
+                candidateList.printCandidateName(ssn);
+                //cout << endl;
+                for (int i = 1; i <= NUM_OF_CAMPUSES; ++i)
+                    candidateList.printCandidateCampusVotes(ssn, i);
+            }
+            cout << endl;
+            break;
+            // Print a candidate's total votes
+        case 3:
+            cout << "\nEnter candidate's social security number (no dashes): ";
+            cin >> ssn;
+            cout << endl;
+            if (candidateList.searchCandidate(ssn))
+            {
+                candidateList.printCandidateName(ssn);
+                //cout << endl;
+                candidateList.printCandidateTotalVotes(ssn);
+            }
+            cout << endl << endl;
+            break;
+            // Print winner
+        case 4:
+            ssn = candidateList.getWinner();
+            if (ssn != 0)
+            {
+                cout << "\nElection winner: ";
+                candidateList.printCandidateName(ssn);
+                //cout << endl;
+                candidateList.printCandidateTotalVotes(ssn);
+            }
+            else
+            {
+                cout << "\n => There are no candidates.";
+            }
+            cout << endl << endl;
+            break;
+        case 5: // prints totall votes and name of each candidate
+            cout << endl;
+            cout << "FINAL RESULTS" << endl;
+            cout << "-------------" << endl;
+            candidateList.printFinalResults();
+            cout << endl;
+            break; 
+        default:
+            cout << "\n => Sorry. That is not a selection. \n";
+            cout << endl;
+        }
+        cout << endl;
+        displayMenu();
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+    }
+    if (choice == 6)
+        cout << "\nThank you and have a great day!" << endl;
+}
